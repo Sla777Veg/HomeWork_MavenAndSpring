@@ -1,9 +1,11 @@
 package com.example.employee_book.Controller;
 
+import com.example.employee_book.exception.InvalidEmployeeRequestException;
 import com.example.employee_book.model.Employee;
 
 import com.example.employee_book.record.EmployeeRequest;
 import com.example.employee_book.service.EmplServ;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +35,13 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public Employee createEmployee(@RequestBody EmployeeRequest employeeRequest) {
-        return this.emplServ.addEmployee(employeeRequest);
+    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeRequest employeeRequest) {
+        try {
+            return ResponseEntity.ok(this.emplServ.addEmployee(employeeRequest)) ;
+        } catch (InvalidEmployeeRequestException e) {
+            System.out.println(e);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/employees/salary/sum")

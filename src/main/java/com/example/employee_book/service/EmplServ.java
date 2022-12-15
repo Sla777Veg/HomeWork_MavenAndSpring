@@ -1,5 +1,8 @@
 package com.example.employee_book.service;
 
+import com.example.employee_book.exception.InvalidEmployeeRequestException;
+import org.springframework.util.StringUtils;
+
 import com.example.employee_book.exception.EmployeeNotFoundException;
 import com.example.employee_book.model.Employee;
 
@@ -19,11 +22,12 @@ public class EmplServ {
     }
 
     public Employee addEmployee(EmployeeRequest employeeRequest) {
-        if (employeeRequest.getFirstName()==null || employeeRequest.getLastName() == null) {
-            throw new IllegalArgumentException("Employee name should be set");
+        if (StringUtils.isEmpty(employeeRequest.getFirstName()) ||
+                StringUtils.isEmpty(employeeRequest.getLastName())) {
+            throw new InvalidEmployeeRequestException();
         }
-        Employee employee = new Employee(employeeRequest.getFirstName(),
-                employeeRequest.getLastName(),
+        Employee employee = new Employee(StringUtils.capitalize(employeeRequest.getFirstName()),
+                StringUtils.capitalize(employeeRequest.getLastName()),
                 employeeRequest.getDepartment(),
                 employeeRequest.getSalary());
 
